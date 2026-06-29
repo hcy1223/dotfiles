@@ -25,7 +25,8 @@ The goal is simple:
 │   └── extensions.txt
 └── scripts/
     ├── sync-from-local.sh
-    └── install-to-local.sh
+    ├── install-to-local.sh
+    └── install-to-local.ps1
 ```
 
 ## What Is Managed
@@ -38,6 +39,12 @@ The goal is simple:
 ~/.config/nvim
 ```
 
+On Windows, it mirrors:
+
+```text
+%LOCALAPPDATA%\nvim
+```
+
 The sync script excludes the nested Neovim Git repository and local log files.
 
 ### VS Code
@@ -48,6 +55,12 @@ Only stable user-level VS Code config is managed:
 ~/Library/Application Support/Code/User/settings.json
 ~/Library/Application Support/Code/User/keybindings.json
 ~/Library/Application Support/Code/User/snippets/
+```
+
+On Windows, the corresponding VS Code config directory is:
+
+```text
+%APPDATA%\Code\User
 ```
 
 Installed extensions are recorded in:
@@ -91,13 +104,21 @@ If settings are changed through the VS Code UI, or if extensions are installed/u
 
 ## Link On A Machine
 
-From the repository root:
+From the repository root on macOS or Linux:
 
 ```sh
 ./scripts/install-to-local.sh
 ```
 
+From the repository root on Windows:
+
+```powershell
+.\scripts\install-to-local.ps1
+```
+
 The install script backs up existing local paths, then creates symlinks from the real editor config locations back into this repository. After that, editing files in this repository updates the config files that Neovim and VS Code read.
+
+On Windows, creating symbolic links may require Developer Mode or an elevated PowerShell session.
 
 Backup names include a timestamp, for example:
 
@@ -117,6 +138,15 @@ The symlinks created are:
 ~/Library/Application Support/Code/User/snippets -> ./vscode/User/snippets
 ```
 
+On Windows, the symlinks created are:
+
+```text
+%LOCALAPPDATA%\nvim -> .\nvim
+%APPDATA%\Code\User\settings.json -> .\vscode\User\settings.json
+%APPDATA%\Code\User\keybindings.json -> .\vscode\User\keybindings.json
+%APPDATA%\Code\User\snippets -> .\vscode\User\snippets
+```
+
 Do not symlink the whole VS Code `User` directory. It contains machine-local runtime state such as `globalStorage`, `workspaceStorage`, `History`, and `sync`.
 
 ## Restore VS Code Extensions
@@ -125,6 +155,12 @@ Make sure the `code` command is available, then run:
 
 ```sh
 xargs -n 1 code --install-extension < vscode/extensions.txt
+```
+
+On Windows PowerShell:
+
+```powershell
+Get-Content .\vscode\extensions.txt | ForEach-Object { code --install-extension $_ }
 ```
 
 On macOS, enable the command from VS Code with:

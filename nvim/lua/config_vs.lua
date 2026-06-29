@@ -5,15 +5,19 @@ function M.setup()
 
   vim.keymap.set({ 'n', 'x', 'i' }, '<leader>b', function()
     vscode.action('editor.action.revealDefinition')
-  end)
+  end, { desc = 'VSCode reveal definition' })
+
+  vim.keymap.set({ 'n', 'x', 'i' }, '<leader>e', function()
+    vscode.action('workbench.action.quickOpen')
+  end, { desc = 'VSCode quick open' })
 
   vim.keymap.set({ 'n', 'x', 'i' }, '<leader>o', function()
     vscode.action('revealInExplorer')
-  end)
+  end, { desc = 'VSCode reveal in explorer' })
 
   vim.keymap.set({ 'n', 'x', 'i' }, '<leader>r', function()
     vscode.action('editor.action.rename')
-  end)
+  end, { desc = 'VSCode rename' })
 
   -- vim.keymap.set({ 'n', 'x', 'i' }, '<D-l>', function()
   --   vscode.action('editor.action.formatDocument')

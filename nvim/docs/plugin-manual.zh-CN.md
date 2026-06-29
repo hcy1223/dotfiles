@@ -4,16 +4,31 @@
 
 本文档基于当前 `init.lua` 中已启用的插件生成。
 
-## 1. 已启用插件清单
+## 维护规则
 
-1. `nvim-mini/mini.nvim`
-2. `mini.statusline`
-3. `mini.basics`
-4. `mini.animate`
-5. `mini.cursorword`
-6. `mini.ai`
-7. `ggandor/leap.nvim`
-8. `otavioschwanck/arrow.nvim`（仅 CLI Neovim）
+如果 `nvim/` 下的 Neovim 配置发生变化，尤其是插件启用条件、插件配置、快捷键映射或 VSCode Neovim 分支逻辑发生变化，必须同步更新本文档，确保手册与实际配置保持一致。
+
+## 1. 启用策略
+
+配置会按运行环境分层加载：
+
+| 插件 / 功能 | CLI Neovim | VSCode Neovim | 说明 |
+| --- | --- | --- | --- |
+| `mini.basics` | 是 | 是 | 基础编辑行为；设置 `<leader>` 为空格 |
+| `mini.ai` | 是 | 是 | Vim 文本对象增强，VS Code 本身不提供 |
+| `leap.nvim` | 是 | 是 | 快速跳转，补足 Vim 编辑体验 |
+| `mini.statusline` | 是 | 否 | VS Code 已有状态栏 |
+| `mini.animate` | 是 | 否 | VS Code 已处理编辑器动画/滚动体验 |
+| `mini.cursorword` | 是 | 否 | VS Code 已有同词/引用高亮能力 |
+| `mini.indentscope` | 是 | 否 | VS Code 已有缩进参考线 |
+| `mini.visits` | 是 | 否 | VS Code 已有 Quick Open / 最近文件 |
+| `spinner.nvim` | 是 | 否 | CLI UI 辅助，VS Code 不需要 |
+| `arrow.nvim` | 是 | 否 | CLI 文件书签；VS Code 有工作区/打开文件体验 |
+| `oil.nvim` | 是 | 否 | CLI 文件管理；VS Code 有 Explorer |
+| `noice.nvim` | 是 | 否 | CLI 命令行/消息 UI；VS Code 不需要 |
+| `theme` / `koda.nvim` | 是 | 否 | VS Code 主题由 VS Code 管理 |
+
+VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 已经负责的 UI、文件管理、工作区和视觉类插件。
 
 ## 2. mini.statusline
 
@@ -22,6 +37,7 @@
 
 ### 当前配置
 - `require('mini.statusline').setup()`
+- 仅 CLI Neovim 加载。
 
 ### 使用
 - 自动生效，无需手动命令。
@@ -33,6 +49,7 @@
 
 ### 当前配置
 - `require('mini.basics').setup()`（默认配置）
+- CLI Neovim 和 VSCode Neovim 都加载。
 
 ### 使用
 - 自动生效。
@@ -45,6 +62,7 @@
 
 ### 当前配置
 - `require('mini.animate').setup()`（默认配置）
+- 仅 CLI Neovim 加载。
 
 ### 使用
 - 自动生效。
@@ -57,6 +75,7 @@
 
 ### 当前配置
 - `require('mini.cursorword').setup()`（默认配置）
+- 仅 CLI Neovim 加载。
 
 ### 使用
 - 自动生效，移动光标即可看到高亮。
@@ -68,6 +87,7 @@
 
 ### 当前配置
 - `require('mini.ai').setup()`（默认配置）
+- CLI Neovim 和 VSCode Neovim 都加载。
 
 ### 常用示例
 1. `vi"`：选中引号内内容
@@ -84,6 +104,7 @@
 - `require('leap').setup({})`
 - 映射：`f` -> `<Plug>(leap)`（n/x/o 模式）
 - 高亮：`LeapBackdrop` 链接到 `Comment`
+- CLI Neovim 和 VSCode Neovim 都加载。
 
 ### 使用步骤
 1. 按 `f`
@@ -118,7 +139,20 @@
 当 `vim.g.vscode == true` 时启用：
 
 1. `<leader>b`：`editor.action.revealDefinition`
-2. `<leader>o`：`revealInExplorer`
-3. `<leader>r`：`editor.action.rename`
+2. `<leader>e`：`workbench.action.quickOpen`
+3. `<leader>o`：`revealInExplorer`
+4. `<leader>r`：`editor.action.rename`
 
-说明：当前文件里未显式设置 `mapleader`，实际 leader 以你的全局/默认配置为准。
+说明：`mini.basics` 会在未设置时把 `<leader>` 设置为空格。
+
+## 10. mini.visits（仅 CLI Neovim）
+
+### 作用
+记录访问过的文件，并按当前工作目录快速选择。
+
+### 当前配置
+- `require('mini.visits').setup()`
+- 映射：`<leader>e` -> 当前 `cwd` 下访问过的文件
+
+### 为什么 VSCode Neovim 不加载
+VS Code 已有 Quick Open、最近文件和工作区文件搜索。VSCode Neovim 分支中 `<leader>e` 直接调用 `workbench.action.quickOpen`，避免重复维护另一套访问记录。

@@ -1,26 +1,27 @@
 --[[
 插件速查（精简）
-1) mini.statusline：状态栏，开箱即用，无快捷键
-2) mini.basics：一组常用基础编辑设置（按 mini.basics 默认项生效）
-3) mini.animate：光标移动、滚动等过渡动画
-4) mini.cursorword：高亮光标下单词
-5) mini.visits：记录访问过的文件
+1) 通用（CLI + VSCode Neovim）：
+   - mini.basics：基础编辑设置；同时设置 <leader> 为空格
+   - mini.ai：增强文本对象
+   - leap.nvim：快速跳转（已占用 f）
+2) VSCode Neovim：
+   - 只保留编辑类插件和 VS Code action 映射
+   - 不加载 VS Code 已有的 UI/文件/工作区类插件
+3) CLI Neovim：
+   - mini.statusline：状态栏，开箱即用，无快捷键
+   - mini.animate：光标移动、滚动等过渡动画
+   - mini.cursorword：高亮光标下单词
+   - mini.indentscope：缩进范围提示
+   - mini.visits：记录访问过的文件
    - <leader>e：选择当前目录访问过的文件
-6) mini.ai：增强文本对象
-   - vi" / va"：选引号内/含引号
-   - ci( / da)：改括号内 / 删含括号对象
-7) leap.nvim：快速跳转（已占用 f）
-   - Normal/Visual/Operator 模式按 f，输入目标字符后跳转
-8) arrow.nvim（仅 CLI Neovim）：
-   - 书签/快速跳转；leader_key=';'，buffer_leader_key='m'
-   - 具体映射可用 :map ; 和 :map m 查看
-9) VSCode Neovim 专用映射：
+   - arrow.nvim：书签/快速跳转；leader_key=';'，buffer_leader_key='m'
+4) VSCode Neovim 专用映射：
    - <leader>b：跳转定义
+   - <leader>e：Quick Open
    - <leader>o：在资源管理器显示
    - <leader>r：重命名
-10) CLI Neovim 映射：
+5) CLI Neovim 映射：
    - <leader>o：打开 Oil 文件管理器
-11) koda.nvim is the theme plugin
 ]]
 -- NOTE: `.luarc.json` is used to fix VSCode LuaLS hint:
 -- `Undefined global 'vim'` (by declaring `vim` in diagnostics.globals).
@@ -57,46 +58,9 @@ now(function()
   require('mini.basics').setup()
 end)
 
-now(function()
-  require('mini.cursorword').setup()
-end)
-
 -- operations
 later(function()
   require('mini.ai').setup()
-end)
-
-now(function()
-  local visits = require('mini.visits')
-  visits.setup()
-
-  vim.keymap.set('n', '<leader>e', function()
-    visits.select_path(vim.fn.getcwd())
-  end, { silent = true, desc = 'Select visited file' })
-end)
-
-later(function()
-  add({
-    source = 'xieyonn/spinner.nvim',
-  })
-  require('spinner').setup()
-end)
-
-later(function()
-  require('mini.indentscope').setup({
-    symbol = '│',
-    options = { try_as_border = true },
-  })
-
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = '*',
-    callback = function(args)
-      local ft = vim.bo[args.buf].filetype
-      if ft ~= 'json' and ft ~= 'jsonc' then
-        vim.b[args.buf].miniindentscope_disable = true
-      end
-    end,
-  })
 end)
 
 -- later(function() require('mini.surround').setup() end)
@@ -131,6 +95,43 @@ else
   vim.opt.smartindent = true
   vim.opt.shiftround = true
   vim.o.autocomplete = true
+
+  now(function()
+    require('mini.cursorword').setup()
+  end)
+
+  now(function()
+    local visits = require('mini.visits')
+    visits.setup()
+
+    vim.keymap.set('n', '<leader>e', function()
+      visits.select_path(vim.fn.getcwd())
+    end, { silent = true, desc = 'Select visited file' })
+  end)
+
+  later(function()
+    add({
+      source = 'xieyonn/spinner.nvim',
+    })
+    require('spinner').setup()
+  end)
+
+  later(function()
+    require('mini.indentscope').setup({
+      symbol = '│',
+      options = { try_as_border = true },
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = '*',
+      callback = function(args)
+        local ft = vim.bo[args.buf].filetype
+        if ft ~= 'json' and ft ~= 'jsonc' then
+          vim.b[args.buf].miniindentscope_disable = true
+        end
+      end,
+    })
+  end)
 
   -- Common web/script formats: 2 spaces.
   vim.api.nvim_create_autocmd('FileType', {
