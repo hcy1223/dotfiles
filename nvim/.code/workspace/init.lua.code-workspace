@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../../"
+		}
+	],
+	"settings": {
+		"Lua.diagnostics.globals": [
+			"vim"
+		]
+	},
+	"extensions": {
+		"recommendations": [
+			"sumneko.lua",
+		]
+	}
+}

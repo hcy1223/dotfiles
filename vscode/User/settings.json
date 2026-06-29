@@ -1,0 +1,45 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.fontSize": 13,
+    "editor.fontFamily": "'Jetbrains Mono NL',Menlo, Monaco, 'Courier New', monospace",
+    "window.menuStyle": "native",
+    "workbench.startupEditor": "none",
+    "svelte.enable-ts-plugin": true,
+    "workbench.editor.revealIfOpen": true,
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "editor.formatOnSave": true,
+    "workbench.iconTheme": "ayu",
+    "window.commandCenter": false,
+    "editor.guides.bracketPairs": true,
+    "editor.guides.bracketPairsHorizontal": false,
+    "editor.bracketPairColorization.enabled": true,
+    "breadcrumbs.enabled": false,
+    "editor.renderWhitespace": "all",
+    "window.titleBarStyle": "custom",
+    "workbench.editor.enablePreview": false,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.linkedEditing": true,
+    "workbench.quickOpen.preserveInput": true,
+    "task.quickOpen.detail": false,
+    "search.quickOpen.history.filterSortOrder": "recency",
+    "task.quickOpen.skip": true,
+    // suggestions and auto completion
+    // 保留观察
+    "javascript.suggest.names": true,
+    // snippets 优先级 降低
+    "editor.suggestSelection": "first",
+    "editor.snippetSuggestions": "bottom",
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    // tab 补全
+    "editor.tabCompletion": "on",
+    "editor.acceptSuggestionOnEnter": "off",
+    "explorer.confirmDelete": false,
+    "workbench.editor.showTabs": "none",
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "redhat.telemetry.enabled": true,
+    "workbench.statusBar.visible": false,
+    "editor.minimap.enabled": false,
+}

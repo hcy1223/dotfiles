@@ -1,0 +1,13 @@
+.DS_Store
+
+# Neovim runtime/log files
+nvim/.git/
+nvim/.nvimlog
+nvim/nvim.log
+nvim/.netrwhist
+
+# Local scratch files
+*.swp
+*.swo
+*.tmp
+
