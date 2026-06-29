@@ -72,17 +72,24 @@ Use profiles as portable snapshots for a whole VS Code profile. Use `vscode/User
 
 ## Daily Workflow
 
-After changing Neovim or VS Code settings locally, refresh this repository:
+After linking this repository to the local config paths, edit the files in this repository directly. Neovim and VS Code will read those linked files.
+
+Use Git to review and commit changes:
 
 ```sh
-./scripts/sync-from-local.sh
 git status
 git diff
 git add .
 git commit -m "Update editor config"
 ```
 
-## Restore On A Machine
+If settings are changed through the VS Code UI, or if extensions are installed/uninstalled through VS Code, refresh this repository:
+
+```sh
+./scripts/sync-from-local.sh
+```
+
+## Link On A Machine
 
 From the repository root:
 
@@ -90,7 +97,9 @@ From the repository root:
 ./scripts/install-to-local.sh
 ```
 
-The install script backs up existing local paths before replacing them. Backup names include a timestamp, for example:
+The install script backs up existing local paths, then creates symlinks from the real editor config locations back into this repository. After that, editing files in this repository updates the config files that Neovim and VS Code read.
+
+Backup names include a timestamp, for example:
 
 ```text
 ~/.config/nvim.backup.20260629160000
@@ -98,6 +107,17 @@ settings.json.backup.20260629160000
 keybindings.json.backup.20260629160000
 snippets.backup.20260629160000
 ```
+
+The symlinks created are:
+
+```text
+~/.config/nvim -> ./nvim
+~/Library/Application Support/Code/User/settings.json -> ./vscode/User/settings.json
+~/Library/Application Support/Code/User/keybindings.json -> ./vscode/User/keybindings.json
+~/Library/Application Support/Code/User/snippets -> ./vscode/User/snippets
+```
+
+Do not symlink the whole VS Code `User` directory. It contains machine-local runtime state such as `globalStorage`, `workspaceStorage`, `History`, and `sync`.
 
 ## Restore VS Code Extensions
 

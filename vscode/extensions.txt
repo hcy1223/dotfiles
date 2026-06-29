@@ -20,3 +20,4 @@ vscjava.vscode-java-test
 vscjava.vscode-maven
 vscodevim.vim
 vue.volar
+wilkey.vsisearch
