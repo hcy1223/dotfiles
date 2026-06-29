@@ -4,21 +4,23 @@
 2) mini.basics：一组常用基础编辑设置（按 mini.basics 默认项生效）
 3) mini.animate：光标移动、滚动等过渡动画
 4) mini.cursorword：高亮光标下单词
-5) mini.ai：增强文本对象
+5) mini.visits：记录访问过的文件
+   - <leader>e：选择当前目录访问过的文件
+6) mini.ai：增强文本对象
    - vi" / va"：选引号内/含引号
    - ci( / da)：改括号内 / 删含括号对象
-6) leap.nvim：快速跳转（已占用 f）
+7) leap.nvim：快速跳转（已占用 f）
    - Normal/Visual/Operator 模式按 f，输入目标字符后跳转
-7) arrow.nvim（仅 CLI Neovim）：
+8) arrow.nvim（仅 CLI Neovim）：
    - 书签/快速跳转；leader_key=';'，buffer_leader_key='m'
    - 具体映射可用 :map ; 和 :map m 查看
-8) VSCode Neovim 专用映射：
+9) VSCode Neovim 专用映射：
    - <leader>b：跳转定义
    - <leader>o：在资源管理器显示
    - <leader>r：重命名
-9) CLI Neovim 映射：
+10) CLI Neovim 映射：
    - <leader>o：打开 Oil 文件管理器
-10) koda.nvim is the theme plugin
+11) koda.nvim is the theme plugin
 ]]
 -- NOTE: `.luarc.json` is used to fix VSCode LuaLS hint:
 -- `Undefined global 'vim'` (by declaring `vim` in diagnostics.globals).
@@ -62,6 +64,15 @@ end)
 -- operations
 later(function()
   require('mini.ai').setup()
+end)
+
+now(function()
+  local visits = require('mini.visits')
+  visits.setup()
+
+  vim.keymap.set('n', '<leader>e', function()
+    visits.select_path(vim.fn.getcwd())
+  end, { silent = true, desc = 'Select visited file' })
 end)
 
 later(function()
