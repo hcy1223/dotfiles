@@ -15,6 +15,7 @@
    - mini.visits：记录访问过的文件
    - <leader>e：选择当前目录访问过的文件
    - arrow.nvim：书签/快速跳转；leader_key=';'，buffer_leader_key='m'
+   - neo-tree.nvim：Git changed files 浮动树
 4) VSCode Neovim 专用映射：
    - <leader>b：跳转定义
    - <leader>e：Quick Open
@@ -22,6 +23,7 @@
    - <leader>r：重命名
 5) CLI Neovim 映射：
    - <leader>o：打开 Oil 文件管理器
+   - <leader>k：打开当前/最近文件所在 Git 仓库的 Git changed files 浮动树
 ]]
 -- NOTE: `.luarc.json` is used to fix VSCode LuaLS hint:
 -- `Undefined global 'vim'` (by declaring `vim` in diagnostics.globals).
@@ -189,6 +191,113 @@ else
     require('oil').setup({})
     vim.keymap.set('n', '<leader>o', '<cmd>Oil<CR>', { silent = true, desc = 'Open Oil' })
   end)
+
+  later(function()
+    add({ source = 'nvim-neo-tree/neo-tree.nvim' })
+    add({ source = 'nvim-lua/plenary.nvim' })
+    add({ source = 'MunifTanjim/nui.nvim' })
+    add({ source = 'nvim-tree/nvim-web-devicons' })
+
+    require('neo-tree').setup({
+      popup_border_style = 'rounded',
+      window = {
+        position = 'float',
+      },
+      git_status = {
+        window = {
+          position = 'float',
+        },
+      },
+    })
+
+    local function git_root_for_path(path)
+      local target = path
+      if target == nil or target == '' then
+        target = vim.fn.getcwd()
+      end
+
+      if vim.fn.isdirectory(target) == 0 then
+        target = vim.fn.fnamemodify(target, ':p:h')
+      end
+
+      local output = vim.fn.systemlist({
+        'git',
+        '-C',
+        target,
+        'rev-parse',
+        '--show-toplevel',
+      })
+
+      if vim.v.shell_error ~= 0 or output[1] == nil or output[1] == '' then
+        return nil
+      end
+
+      return output[1]
+    end
+
+    local function git_context_from_current_or_recent()
+      local candidates = {}
+      local seen = {}
+
+      local function add_candidate(path)
+        if path == nil or path == '' then
+          return
+        end
+
+        local normalized = vim.fn.fnamemodify(path, ':p')
+        if seen[normalized] then
+          return
+        end
+
+        seen[normalized] = true
+        table.insert(candidates, normalized)
+      end
+
+      add_candidate(vim.api.nvim_buf_get_name(0))
+
+      local buffers = vim.fn.getbufinfo({ buflisted = 1 })
+      table.sort(buffers, function(left, right)
+        return (left.lastused or 0) > (right.lastused or 0)
+      end)
+
+      for _, buffer in ipairs(buffers) do
+        add_candidate(buffer.name)
+      end
+
+      add_candidate(vim.fn.getcwd())
+
+      for _, path in ipairs(candidates) do
+        local root = git_root_for_path(path)
+        if root ~= nil then
+          return root, path
+        end
+      end
+
+      return nil, nil
+    end
+
+    vim.keymap.set('n', '<leader>k', function()
+      local root, anchor = git_context_from_current_or_recent()
+      if root == nil then
+        vim.notify('不是 git repo', vim.log.levels.WARN)
+        return
+      end
+
+      local command = {
+        'Neotree',
+        'git_status',
+        'float',
+        'dir=' .. vim.fn.fnameescape(root),
+      }
+
+      if anchor ~= nil and anchor ~= '' and anchor:sub(1, #root) == root then
+        table.insert(command, 'reveal_file=' .. vim.fn.fnameescape(anchor))
+      end
+
+      vim.cmd(table.concat(command, ' '))
+    end, { silent = true, desc = 'Open Git changed files' })
+  end)
+
   later(function()
     add({
       source = 'folke/noice.nvim',

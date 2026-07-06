@@ -25,6 +25,7 @@
 | `spinner.nvim` | 是 | 否 | CLI UI 辅助，VS Code 不需要 |
 | `arrow.nvim` | 是 | 否 | CLI 文件书签；VS Code 有工作区/打开文件体验 |
 | `oil.nvim` | 是 | 否 | CLI 文件管理；VS Code 有 Explorer |
+| `neo-tree.nvim` | 是 | 否 | CLI Git changed files 浮动树；VS Code 有 Source Control |
 | `noice.nvim` | 是 | 否 | CLI 命令行/消息 UI；VS Code 不需要 |
 | `theme` / `koda.nvim` | 是 | 否 | VS Code 主题由 VS Code 管理 |
 
@@ -156,3 +157,28 @@ VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 
 
 ### 为什么 VSCode Neovim 不加载
 VS Code 已有 Quick Open、最近文件和工作区文件搜索。VSCode Neovim 分支中 `<leader>e` 直接调用 `workbench.action.quickOpen`，避免重复维护另一套访问记录。
+
+## 11. neo-tree.nvim（仅 CLI Neovim）
+
+### 作用
+以浮动窗口打开 Git changed files 树，快速查看当前仓库中有变更的文件。
+
+### 当前配置
+- 插件：`nvim-neo-tree/neo-tree.nvim`
+- 依赖：`nvim-lua/plenary.nvim`、`MunifTanjim/nui.nvim`、`nvim-tree/nvim-web-devicons`
+- `popup_border_style = 'rounded'`
+- `window.position = 'float'`
+- `git_status.window.position = 'float'`
+- 映射：`<leader>k` -> 打开 Git changed files 浮动树
+
+### 定位规则
+按 `<leader>k` 时，会按以下顺序寻找 Git 仓库：
+
+1. 当前 buffer 对应的文件
+2. 最近使用过的已列出 buffer
+3. 当前工作目录
+
+找到仓库后，打开 `neo-tree` 的 `git_status` source，并尽量 reveal 当前或最近文件。若以上位置都不属于 Git 仓库，会提示：`不是 git repo`。
+
+### 为什么 VSCode Neovim 不加载
+VS Code 已有 Source Control 视图和文件树，VSCode Neovim 分支不重复加载 Git changed files UI。
