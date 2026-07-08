@@ -12,8 +12,8 @@
    - mini.animate：光标移动、滚动等过渡动画
    - mini.cursorword：高亮光标下单词
    - mini.indentscope：缩进范围提示
-   - mini.visits：记录访问过的文件
-   - <leader>e：选择当前目录访问过的文件
+   - fff.nvim：frecency 文件搜索和 live grep
+   - <leader>e：按 frecency 模糊搜索文件
    - arrow.nvim：书签/快速跳转；leader_key=';'，buffer_leader_key='m'
    - neo-tree.nvim：Git changed files 浮动树
 4) VSCode Neovim 专用映射：
@@ -22,6 +22,7 @@
    - <leader>o：在资源管理器显示
    - <leader>r：重命名
 5) CLI Neovim 映射：
+   - <leader>f：FFF live grep
    - <leader>o：打开 Oil 文件管理器
    - <leader>k：打开当前/最近文件所在 Git 仓库的 Git changed files 浮动树
 ]]
@@ -102,15 +103,6 @@ else
     require('mini.cursorword').setup()
   end)
 
-  now(function()
-    local visits = require('mini.visits')
-    visits.setup()
-
-    vim.keymap.set('n', '<leader>e', function()
-      visits.select_path(vim.fn.getcwd())
-    end, { silent = true, desc = 'Select visited file' })
-  end)
-
   later(function()
     add({
       source = 'xieyonn/spinner.nvim',
@@ -184,6 +176,36 @@ else
       leader_key = ';',        -- Recommended to be a single key
       buffer_leader_key = 'm', -- Per Buffer Mappings
     })
+  end)
+  later(function()
+    add({
+      source = 'dmtrKovalenko/fff.nvim',
+      hooks = {
+        post_install = function(args)
+          vim.opt.rtp:prepend(args.path)
+          require('fff.download').download_or_build_binary()
+        end,
+        post_checkout = function(args)
+          vim.opt.rtp:prepend(args.path)
+          require('fff.download').download_or_build_binary()
+        end,
+      },
+    })
+
+    require('fff').setup({
+      lazy_sync = true,
+      frecency = {
+        enabled = true,
+      },
+    })
+
+    vim.keymap.set('n', '<leader>e', function()
+      require('fff').find_files()
+    end, { silent = true, desc = 'FFF find files' })
+
+    vim.keymap.set('n', '<leader>f', function()
+      require('fff').live_grep()
+    end, { silent = true, desc = 'FFF live grep' })
   end)
   later(function()
     add({ source = 'stevearc/oil.nvim' })

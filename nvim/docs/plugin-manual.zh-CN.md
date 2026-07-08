@@ -21,7 +21,7 @@
 | `mini.animate` | 是 | 否 | VS Code 已处理编辑器动画/滚动体验 |
 | `mini.cursorword` | 是 | 否 | VS Code 已有同词/引用高亮能力 |
 | `mini.indentscope` | 是 | 否 | VS Code 已有缩进参考线 |
-| `mini.visits` | 是 | 否 | VS Code 已有 Quick Open / 最近文件 |
+| `fff.nvim` | 是 | 否 | CLI frecency 文件搜索和 live grep；VS Code 有 Quick Open / Search |
 | `spinner.nvim` | 是 | 否 | CLI UI 辅助，VS Code 不需要 |
 | `arrow.nvim` | 是 | 否 | CLI 文件书签；VS Code 有工作区/打开文件体验 |
 | `oil.nvim` | 是 | 否 | CLI 文件管理；VS Code 有 Explorer |
@@ -146,17 +146,31 @@ VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 
 
 说明：`mini.basics` 会在未设置时把 `<leader>` 设置为空格。
 
-## 10. mini.visits（仅 CLI Neovim）
+## 10. fff.nvim（仅 CLI Neovim）
 
 ### 作用
-记录访问过的文件，并按当前工作目录快速选择。
+提供 frecency 排序的文件名模糊搜索和项目内 live grep。
+
+打开文件搜索时，默认展示最近/常访问文件；输入关键字后按模糊匹配结果过滤，并继续结合 frecency 权重排序。
 
 ### 当前配置
-- `require('mini.visits').setup()`
-- 映射：`<leader>e` -> 当前 `cwd` 下访问过的文件
+- 插件：`dmtrKovalenko/fff.nvim`
+- 安装 hook：调用 `require('fff.download').download_or_build_binary()` 下载预编译二进制；若不可用则按插件逻辑回退构建。
+- `lazy_sync = true`
+- `frecency.enabled = true`
+- 映射：`<leader>e` -> `require('fff').find_files()`
+- 映射：`<leader>f` -> `require('fff').live_grep()`
+
+### 使用
+1. `<leader>e`：按 frecency 模糊搜索文件名/路径。
+2. `<leader>f`：项目内搜索文件内容。
+
+### 注意
+- `fff.nvim` 需要额外的本地二进制组件；首次安装或更新时会下载预编译二进制，必要时回退到本机构建。
+- 若搜索索引异常，可在 Neovim 内执行 `:FFFHealth` 检查，或执行 `:FFFScan` 重新扫描。
 
 ### 为什么 VSCode Neovim 不加载
-VS Code 已有 Quick Open、最近文件和工作区文件搜索。VSCode Neovim 分支中 `<leader>e` 直接调用 `workbench.action.quickOpen`，避免重复维护另一套访问记录。
+VS Code 已有 Quick Open、最近文件和全局搜索。VSCode Neovim 分支中 `<leader>e` 直接调用 `workbench.action.quickOpen`，避免重复维护另一套文件搜索 UI。
 
 ## 11. neo-tree.nvim（仅 CLI Neovim）
 
