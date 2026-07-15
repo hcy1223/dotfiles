@@ -13,7 +13,7 @@
    - mini.cursorword：高亮光标下单词
    - mini.indentscope：缩进范围提示
    - fff.nvim：frecency 文件搜索和 live grep
-   - <leader>e：按 frecency 模糊搜索文件
+   - <leader>e：顶部搜索、下方按 frecency 排序文件，无预览
    - arrow.nvim：书签/快速跳转；leader_key=';'，buffer_leader_key='m'
    - neo-tree.nvim：Git changed files 浮动树
 4) VSCode Neovim 专用映射：
@@ -194,13 +194,22 @@ else
 
     require('fff').setup({
       lazy_sync = true,
+      layout = {
+        prompt_position = 'top',
+      },
+      preview = {
+        enabled = false,
+      },
       frecency = {
         enabled = true,
       },
     })
 
     vim.keymap.set('n', '<leader>e', function()
-      require('fff').find_files()
+      require('fff').find_files({
+        -- Keep file search focused: do not fall back to content suggestions.
+        grep_config = { max_file_size = 0 },
+      })
     end, { silent = true, desc = 'FFF find files' })
 
     vim.keymap.set('n', '<leader>f', function()

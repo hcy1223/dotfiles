@@ -151,14 +151,16 @@ VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 
 ### 作用
 提供 frecency 排序的文件名模糊搜索和项目内 live grep。
 
-打开文件搜索时，默认展示最近/常访问文件；输入关键字后按模糊匹配结果过滤，并继续结合 frecency 权重排序。
+打开文件搜索时不显示预览，搜索框位于顶部、文件列表位于下方。没有输入搜索内容时，文件列表按 frecency 优先展示最近且高频访问的文件；输入关键字后按模糊匹配结果过滤，并继续结合 frecency 权重排序。文件名没有匹配结果时保持空列表，不自动提示文件内容匹配结果。
 
 ### 当前配置
 - 插件：`dmtrKovalenko/fff.nvim`
 - 安装 hook：调用 `require('fff.download').download_or_build_binary()` 下载预编译二进制；若不可用则按插件逻辑回退构建。
 - `lazy_sync = true`
+- `layout.prompt_position = 'top'`
+- `preview.enabled = false`
 - `frecency.enabled = true`
-- 映射：`<leader>e` -> `require('fff').find_files()`
+- 映射：`<leader>e` -> `require('fff').find_files({ grep_config = { max_file_size = 0 } })`，关闭无文件名结果时的内容匹配提示
 - 映射：`<leader>f` -> `require('fff').live_grep()`
 
 ### 使用
