@@ -205,6 +205,14 @@ else
       },
     })
 
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'fff_input',
+      callback = function(event)
+        vim.bo[event.buf].autocomplete = false
+      end,
+      desc = 'Disable native completion in FFF search input',
+    })
+
     vim.keymap.set('n', '<leader>e', function()
       require('fff').find_files({
         -- Keep file search focused: do not fall back to content suggestions.

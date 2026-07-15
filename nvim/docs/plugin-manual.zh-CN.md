@@ -160,6 +160,7 @@ VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 
 - `layout.prompt_position = 'top'`
 - `preview.enabled = false`
 - `frecency.enabled = true`
+- `fff_input` 文件类型关闭 Neovim 原生 `autocomplete`，避免搜索框自动弹出补全菜单
 - 映射：`<leader>e` -> `require('fff').find_files({ grep_config = { max_file_size = 0 } })`，关闭无文件名结果时的内容匹配提示
 - 映射：`<leader>f` -> `require('fff').live_grep()`
 
