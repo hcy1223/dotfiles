@@ -160,6 +160,9 @@ VSCode Neovim 分支只保留“编辑语义”相关能力，不加载 VS Code 
 - `layout.prompt_position = 'top'`
 - `preview.enabled = false`
 - `frecency.enabled = true`
+- `hl.matched = 'Search'`：参照 JetBrains Go to File，在 `<leader>e` 结果中高亮文件名的匹配字符
+- `grep.smart_case = true`：`<leader>f` 输入全小写时忽略大小写；输入包含大写时区分大小写
+- `hl.grep_match = 'Search'`：参照 JetBrains Find in Files，在 `<leader>f` 结果中高亮匹配的单词
 - `fff_input` 文件类型关闭 Neovim 原生 `autocomplete`，避免搜索框自动弹出补全菜单
 - 映射：`<leader>e` -> `require('fff').find_files({ grep_config = { max_file_size = 0 } })`，关闭无文件名结果时的内容匹配提示
 - 映射：`<leader>f` -> `require('fff').live_grep()`

@@ -203,6 +203,14 @@ else
       frecency = {
         enabled = true,
       },
+      grep = {
+        -- Lowercase queries match file contents case-insensitively.
+        smart_case = true,
+      },
+      hl = {
+        matched = 'Search',
+        grep_match = 'Search',
+      },
     })
 
     vim.api.nvim_create_autocmd('FileType', {
