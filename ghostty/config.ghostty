@@ -1,0 +1,33 @@
+# ===== Core =====
+font-size = 15.5
+font-family = ""
+font-family = "Menlo"
+font-family = "Sarasa Term SC"
+cursor-style = block
+scrollback-limit = 100000000
+
+# ===== Theme =====
+theme = "GitHub Dark Default"
+
+# ===== UI =====
+scrollbar = never
+copy-on-select = true
+window-decoration = true
+window-inherit-working-directory = true
+window-inherit-font-size = true
+
+# ===== Shell Integration =====
+shell-integration = detect
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo,path
+
+# ===== Safety =====
+clipboard-read = ask
+clipboard-paste-protection = true
+confirm-close-surface = always
+
+# ===== macOS =====
+macos-icon = custom
+macos-option-as-alt = left
+
+# ===== Keybinds =====
+keybind = "" # Supply privately after restore.

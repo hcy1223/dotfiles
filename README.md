@@ -186,3 +186,13 @@ Profile import/export is a VS Code UI workflow. The `code` CLI can open a worksp
 - Do not commit secrets, tokens, local API keys, or machine-specific absolute paths unless they are intentional.
 - If Neovim plugins generate local state under `nvim/`, add those paths to `.gitignore` before committing.
 - Treat `.code-profile` files as optional snapshots, not the main daily sync mechanism.
+
+## Fish and Ghostty
+
+- `fish/` records `~/.config/fish`, including config, functions, completions, conf.d and universal variables. Old backups are excluded.
+- `ghostty/` records `~/.config/ghostty`, including config.ghostty, helper scripts and the custom icon.
+- `ghostty/auto/theme.ghostty` records the macOS generated theme file.
+- The macOS/Linux installer links Fish and Ghostty; the macOS installer also links the auto theme folder. The Windows installer does not manage these additions.
+- Literal credential assignments were cleared in the snapshots. Supply credentials privately after restore.
+- Fish/Ghostty are not imported automatically by sync-from-local.sh, to avoid reintroducing credentials. After linking, edit tracked config directly.
+- The installer has not been run as part of adding these snapshots.

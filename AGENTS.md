@@ -63,3 +63,7 @@ Review the diff before finishing:
 git diff
 git status --short
 ```
+
+## Terminal configuration
+
+User-requested scope includes `fish/` and `ghostty/`. Preserve portable configuration and helper scripts. Do not commit hardcoded credentials, runtime history, or obsolete backups. Fish/Ghostty imports are manual and require a credential review.

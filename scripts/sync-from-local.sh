@@ -33,3 +33,6 @@ fi
 if command -v code >/dev/null 2>&1; then
   code --list-extensions > "$repo_root/vscode/extensions.txt"
 fi
+
+# Fish/Ghostty snapshots are managed manually. Review credentials before
+# refreshing them; linking with install-to-local.sh avoids repeat imports.

@@ -25,3 +25,15 @@ backup_path "$vscode_user/snippets"
 ln -s "$repo_root/vscode/User/settings.json" "$vscode_user/settings.json"
 ln -s "$repo_root/vscode/User/keybindings.json" "$vscode_user/keybindings.json"
 ln -s "$repo_root/vscode/User/snippets" "$vscode_user/snippets"
+
+# Fish and Ghostty portable config
+backup_path "$HOME/.config/fish"
+backup_path "$HOME/.config/ghostty"
+ln -s "$repo_root/fish" "$HOME/.config/fish"
+ln -s "$repo_root/ghostty" "$HOME/.config/ghostty"
+if [ "$(uname -s)" = "Darwin" ]; then
+  ghostty_user="$HOME/Library/Application Support/com.mitchellh.ghostty"
+  mkdir -p "$ghostty_user"
+  backup_path "$ghostty_user/auto"
+  ln -s "$repo_root/ghostty/auto" "$ghostty_user/auto"
+fi
